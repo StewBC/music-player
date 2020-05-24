@@ -14,9 +14,10 @@
     fileStart  = tempBlock + 2                  ; index to start of file name
     fileHex    = tempBlock + 3                  ; index past hex portion of file name
 
+    lda #1
+    sta partBank                                ; internal - where a part goes
     lda #0
     sta songBanks                               ; banks used by sound starts at $00
-    sta partBank                                ; internal - where a part goes
     sta musicNumSongs                           ; number of songs loaded
     sta fileStart                               ; offset to song name
     sta musicRepeat                             ; turn off auto-repeat
@@ -72,7 +73,7 @@ part:
     clc 
     jsr SETNAM
     lda #$00                                    ; logical number
-    ldx #$01                                    ; device 1
+    ldx #$08                                    ; device 1
     ldy #$01                                    ; secondary address
     jsr SETLFS 
     ldx #<BANKED_RAM                            ; address of where to load in x/y
@@ -269,6 +270,10 @@ wrap:
     jmp (old_irq)                               ; if there was a delay, chain the old irq
 
 start:
+    lda VIA1P1
+    sta irq_bank
+    lda musicBank
+    sta VIA1P1                                  ; and set the bank active
     ldy #0                                      ; index y to 0
 
 loop:
@@ -307,6 +312,8 @@ leave:
     bcc :+
     inc zMusicPtr + 1
 :
+    lda irq_bank
+    sta VIA1P1
     jmp (old_irq)                               ; and chain the old IRQ
 
 done:

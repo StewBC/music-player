@@ -17,12 +17,13 @@ musicNumSongs:      .res 1                      ; Number of songs loaded
 musicPlaying:       .res 1                      ; true - IRQ installed, fals - NOT installed
 musicRepeat:        .res 1                      ; true - repeat current song endlessly
 old_irq:            .res 2                      ; $0314 original address
+irq_bank:           .res 1                      ; active bank when IRQ is called
 
 tempBlock:          .res 19                     ; used by different routines that need local storage
 
 ;-----------------------------------------------------------------------------
 songTitles:                                     ; Song name and 2 bytes for the hex part number
-    .byte "0210"  , $00, $00
+    .byte "0210"      , $00, $00
     .byte "02final"   , $00, $00
     .byte "03red"     , $00, $00
     .byte "04super"   , $00, $00
@@ -41,8 +42,9 @@ songsParts:                                     ; how many parts the song has
     .byte $0c   ; 05after     
     .byte $01   ; 06city      
     .byte $07   ; 10cruising  
-    .byte $0f   ; 08final     
-    .byte $08   ; 11camino    
+    .byte $10   ; 08final     
+    .byte $02   ; 11camino                      ; SHould be $08 but that requires more than the default 512 KB ram
+                                                ; run emulator with -ram 2048 to set to $08
 
 songBanks:                                      ; Filled in by loader
     .byte $00   ; 0210

@@ -1,5 +1,5 @@
 # music-player
- Commander X16 IRQ based Music Player
+ Commander X16 IRQ based Music Player (R37)
 
 1. INTRODUCTION
 
@@ -46,8 +46,15 @@ repeat is true.
 The music player uses 2 bytes of zero page, but even that can be avoided if
 needed.
 
-An important note for using the player - file names must be all lowe-case or
-the load will fail.  After loading, if carry is set, the load failed.
+Important notes for using the player:
+
+1) The music must be in the same folder the emulator is started from.  As is
+   checked in, the Makefile takes care of this.
+
+2) File names must be all lowe-case or the load will fail.  
+
+3) After loading, if carry is set, the load failed.  As it is here in GitHub
+   that means the player will simpy hang and not return to the READY prompt.
 
 The code is written for ca65, the assembler that's part of the cc65 toolchain.
 The code is 6502 only.
